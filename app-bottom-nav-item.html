@@ -1,0 +1,117 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="app-bottom-nav-item-animation-behavior.html">
+
+<!--
+
+`app-bottom-nav-item` is a subcomponent of <a href="#app-bottom-nav">`app-bottom-nav`</a>.
+
+This element defines animatable navigation items that consist of an icon and a
+text label. An `app-bottom-nav` element should contain between 3 and 5
+`app-bottom-nav-item` elements.
+
+### Examples
+
+The following snippet adds a bottom navigation element with three child navigation options.
+
+```html
+<app-bottom-nav selected="{{selected}}">
+  <app-bottom-nav-item icon="history" label="Recent"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="favorite" label="Favorites"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="maps:near-me" label="Nearby"></app-bottom-nav-item>
+</app-bottom-nav>
+```
+
+### Styling
+
+Custom property                  | Description                            | Default
+---------------------------------|----------------------------------------|--------------------
+`--app-bottom-nav-active`        | Color of active items                  | `--primary-color`
+`--app-bottom-nav-inactive`      | Color of inactive items                | `--secondary-text-color`
+
+<strong>Remarks:</strong>
+- These CSS properties are expected to be inherited from `app-bottom-nav`
+- If the background of the parent `app-bottom-nav` is colored, the active and inactive colors should be white or black.
+
+@demo demo/index.html
+-->
+
+<dom-module id="app-bottom-nav-item">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 8px 12px 10px;
+        min-width: 56px;
+        max-width: 144px;
+        font-size: 10px;
+        text-align: center;
+
+        -ms-flex: 1 1 144px;
+        -webkit-flex: 1;
+        flex: 1;
+        -webkit-flex-basis: 144px;
+        flex-basis: 144px;
+
+        color: var(--app-bottom-nav-inactive, --secondary-text-color);
+      }
+
+      :host([active]) {
+        padding-top: 6px;
+        font-size: 12px;
+        color: var(--app-bottom-nav-active, --primary-color);
+      }
+
+      :host > * {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      iron-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      span {
+        padding-top: 1px;
+      }
+
+      :host([active][compact]) {
+        min-width: 96px;
+      }
+
+      :host([compact]):not([active]) {
+        padding-top: 16px;
+        min-width: 32px;
+        max-width: 72px;
+      }
+
+      :host([compact]):not([active]) > span {
+        display: none;
+      }
+    </style>
+
+    <iron-icon icon="[[icon]]" alt="[[label]]"></iron-icon>
+    <span id="label">[[label]]</span>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'app-bottom-nav-item',
+      behaviors: [ Polymer.AppBottomNavItemAnimationBehavior ],
+      listeners: {
+        'tap': '_tapHandler'
+      },
+      _tapHandler: function() {
+        this.fire('nav-item-tap', {'name': 'nav-item-tap', 'active' : this.hasAttribute('active'), 'label': this.label});
+      }
+
+      /*
+       * Fired when this item is tapped. Passes on information about this nav-item.
+       * @event nav-item-tap
+       */
+    });
+  </script>
+</dom-module>

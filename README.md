@@ -33,9 +33,10 @@ The demo here uses icons from the file [`app-bottom-nav/demo/demo-icons.html`](h
 
 ## Updates
 
-**Version 0.0.1 -> Version 0.0.2**
-- (Issue #1) Improved icon documentation for demo code.
+**Version 0.0.1 -> Version 0.0.4**
+- (Fixes Issue #1) Improved icon documentation for demo code.
 - (Issue #2) Added `force-compact` property to `app-bottom-nav` element. This will force the `compact` attribute on its children which normally only happens when 4 or 5 children are present.
+- (Fixes Issue #2) Added `notify` property attribute to `selected` on `app-bottom-nav` element.
 - **Breaking:** `force()` renamed to `showAlways()` on `app-bottom-nav` element
 - **Breaking:** `clearForce()` renamed to `showDefault()` on `app-bottom-nav` element
 - **Breaking:** `toggleForce()` renamed to `toggleForceNarrow()` on `app-bottom-nav` element
@@ -47,6 +48,7 @@ The demo here uses icons from the file [`app-bottom-nav/demo/demo-icons.html`](h
 - Added ripple animation (based on `Polymer.PaperRippleBehavior`) to `app-bottom-nav-item` element
 - CSS scoping bug should be fixed (in theory)
 - Updated README format (added Polymer version badge, used attachments)
+- Fix `bower.json` version information
 
 
 ## To Do List

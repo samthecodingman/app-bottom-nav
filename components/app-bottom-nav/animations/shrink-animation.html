@@ -1,0 +1,40 @@
+
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../neon-animation/neon-animation-behavior.html">
+<link rel="import" href="../../neon-animation/web-animations.html">
+
+<!--
+`<shrink-animation>` animates the padding and color changes as the element leaves it's &quot;active&quot; state.
+
+Configuration:
+```
+{
+  name: 'shrink-animation',
+  node: <node>
+  timing: <animation-timing>
+}
+```
+-->
+
+<script>
+
+  Polymer({
+
+    is: 'shrink-animation',
+
+    behaviors: [
+      Polymer.NeonAnimationBehavior
+    ],
+
+    configure: function(config) {
+      var node = config.node;
+      this._effect = new KeyframeEffect(node, [
+        {'paddingTop': '6px', 'color': node.getComputedStyleValue('--abn-impl-active')},
+        {'paddingTop': '8px', 'color': node.getComputedStyleValue('--abn-impl-inactive')}
+      ], this.timingFromConfig(config));
+      return this._effect;
+    }
+
+  });
+
+</script>

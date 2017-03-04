@@ -1,0 +1,207 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+<link rel="import" href="app-bottom-nav-item.html">
+
+<!--
+
+`app-bottom-nav` is a <a href="https://material.io/guidelines/components/bottom-navigation.html">Material Design</a> compliant bottom navigation element.
+
+### Usage Instructions
+
+By default, the element will only be visible when the viewport is less than
+640px. This corresponds to the default `app-drawer-layout` responsive width and
+means the `app-bottom-nav` will show when the app-drawer retracts.
+
+- Each navigation option is added as an `app-bottom-nav-item` element and assigned
+an icon and a text label.
+- `app-bottom-nav` should only contain between 3 and 5 `app-bottom-nav-item` elements.
+- The `selected` attribute will contain the label of the currently selected navigation item.
+
+### Examples
+
+The following snippet adds a bottom navigation element with three child navigation options.
+
+```html
+<app-bottom-nav selected="{{selected}}">
+  <app-bottom-nav-item icon="abn-demo:history" label="Recent"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:favorite" label="Favorites"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:near-me" label="Nearby"></app-bottom-nav-item>
+</app-bottom-nav>
+```
+
+By default, the `app-bottom-nav` element is only shown on narrow screens. To
+override this behavior, add the `force-narrow` attribute as shown below.
+
+```html
+<app-bottom-nav force-narrow="true">
+  <app-bottom-nav-item icon="abn-demo:history" label="Recent"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:favorite" label="Favorites"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:near-me" label="Nearby"></app-bottom-nav-item>
+</app-bottom-nav>
+```
+
+The demos here use icons from the file `app-bottom-nav/demo/demo-icons.html`.
+
+### Styling
+
+Custom property                  | Description                            | Default
+---------------------------------|----------------------------------------|--------------------
+`--app-bottom-nav-background`    | Background color of the element        | `--primary-background-color`
+`--app-bottom-nav-active`        | Color of active navigation items       | `--primary-color`
+`--app-bottom-nav-inactive`      | Color of inactive navigation items     | `--secondary-text-color`
+
+<strong>Remarks:</strong>
+- If the background of the parent `app-bottom-nav` is colored, the active and inactive colors should be white or black.
+
+@demo demo/index-compact.html
+@demo demo/index-triple.html
+-->
+
+<dom-module id="app-bottom-nav">
+  <template>
+    <style>
+      :host {
+        --abn-impl-bg: var(--app-bottom-nav-background, var(--primary-background-color, #FFFFFF));
+        @apply(--layout-fixed-bottom);
+        margin: 0px;
+        padding: 0px;
+        height: 56px;
+        background-color: var(--abn-impl-bg);
+        opacity: 1;
+        visibility: hidden;
+        z-index: 1;
+        transition-property: visibility;
+      }
+
+      :host(.narrow) {
+        visibility: visible;
+      }
+
+      container {
+        margin: 0 auto;
+        display: block;
+      }
+
+      iron-selector {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+    </style>
+    <iron-media-query
+        query="[[_computeMediaQuery(forceNarrow, responsiveWidth)]]"
+        on-query-matches-changed="_onQueryMatchesChanged"></iron-media-query>
+    <iron-selector id="nav-selector" attr-for-selected="label" selected="{{selected}}" selected-attribute="active">
+      <content></content>
+    </iron-selector>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'app-bottom-nav',
+      properties: {
+        /**
+         * If true, ignore `responsiveWidth` setting and force the narrow layout. (nav is visble)
+         */
+        forceNarrow: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        /**
+         * If true, ignore number of children check and force the compact layout.
+         */
+        forceCompact: {
+          type: Boolean,
+          value: false,
+          observer: '_forceCompactChanged'
+        },
+
+        /**
+         * The label of the currently selected `app-bottom-nav-item`.
+         */
+        selected: {
+          type: String,
+          reflectToAttribute: true
+        },
+
+        /**
+         * If the viewport's width is smaller than this value, the bottom-nav will be visible.
+         * Otherwise, it will be hidden as it is expected an `app-drawer` or `app-side-nav` element will be present.
+         */
+        responsiveWidth: {
+          type: String,
+          value: '640px'
+        },
+      },
+
+      listeners: {
+        'nav-item-tap': '_tapHandler'
+      },
+
+      attached: function() {
+        this._computeCompactAttribute(this.forceCompact);
+      },
+
+      _computeCompactAttribute: function (forceCompact) {
+        elist = this.queryAllEffectiveChildren("app-bottom-nav-item");
+        var c = elist.length > 3 || forceCompact;
+        elist.forEach(function(e){e.toggleAttribute('compact', c, e);});
+      },
+
+      /**
+       * Observes `force-compact` property and updates children appropriately
+       */
+      _forceCompactChanged: function(val) {
+        if (this.isAttached) { this._computeCompactAttribute(val); }
+      },
+
+      /**
+       * Forces the `app-bottom-nav` to appear at all times, ignoring `responsiveWidth`
+       */
+      showAlways: function() {
+        this.forceNarrow = true;
+      },
+
+      /**
+       * Resets the element to it's default responsive behavior of "only show when narrow"
+       */
+      showDefault: function() {
+        this.forceNarrow = false;
+      },
+
+      /**
+       * Toggles this element's responsive behavior between "always show" and "only show when narrow"
+       */
+      toggleForceNarrow: function() {
+        this.forceNarrow = !this.forceNarrow;
+      },
+
+      _tapHandler: function(e) {
+        if (e.detail.name == 'nav-item-tap' && e.detail.active == true) {
+          this.fire('scroll-top', {'from': 'app-bottom-nav'})
+        }
+      },
+
+      _narrowChanged: function(narrow) {
+        this.toggleClass('narrow', narrow, this);
+      },
+
+      _onQueryMatchesChanged: function(event) {
+        this._narrowChanged(event.detail.value);
+      },
+
+      _computeMediaQuery: function(forceNarrow, responsiveWidth) {
+        return forceNarrow ? '(min-width: 0px)' : '(max-width: ' + responsiveWidth + ')';
+      }
+
+      /*
+       * Requests that the parent scroll to the top of the page.
+       * Fired when the currently selected nav item is tapped.
+       * @event scroll-top
+       */
+    });
+  </script>
+</dom-module>

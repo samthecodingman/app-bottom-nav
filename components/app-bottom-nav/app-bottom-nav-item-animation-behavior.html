@@ -1,0 +1,109 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="animations/grow-font-animation.html">
+<link rel="import" href="animations/shrink-font-animation.html">
+<link rel="import" href="animations/compact-grow-font-animation.html">
+<link rel="import" href="animations/compact-shrink-font-animation.html">
+<link rel="import" href="animations/grow-animation.html">
+<link rel="import" href="animations/shrink-animation.html">
+<link rel="import" href="animations/compact-grow-animation.html">
+<link rel="import" href="animations/compact-shrink-animation.html">
+
+<script>
+
+  /**
+   * `Polymer.AppBottomNavItemAnimationBehavior` defines the animation configuration and events for `app-bottom-nav-item`.
+   *
+   * @polymerBehavior Polymer.AppBottomNavItemAnimationBehavior
+   */
+  Polymer.AppBottomNavItemAnimationBehaviorImpl = {
+    properties: {
+      /*
+       * Setting this to true will disable the default animations.
+       */
+      static: {
+        type: Boolean,
+        value: false,
+        reflect: true
+      },
+
+      /*
+       * Configures the animations for this element.
+       * @default Object()
+       * @private
+       */
+      animationConfig: {
+        value: function() {
+          return this.static ? {
+            'select': [],
+            'compact-select': [],
+            'deselect': [],
+            'compact-deselect': []
+          } : {
+            'select': [{
+              name: 'grow-font-animation',
+              node: this.$.label,
+              timing: {duration: 200}
+            },{
+              name: 'grow-animation',
+              node: this,
+              timing: {duration: 200}
+            }],
+            'compact-select': [{
+              name: 'compact-grow-font-animation',
+              node: this.$.label,
+              timing: {duration: 200}
+            },{
+              name: 'compact-grow-animation',
+              node: this,
+              timing: {duration: 200}
+            }],
+            'deselect': [{
+              name: 'shrink-font-animation',
+              node: this.$.label,
+              timing: {duration: 200}
+            },{
+              name: 'shrink-animation',
+              node: this,
+              timing: {duration: 200}
+            }],
+            'compact-deselect': [{
+              name: 'compact-shrink-font-animation',
+              node: this.$.label,
+              timing: {duration: 200}
+            },{
+              name: 'compact-shrink-animation',
+              node: this,
+              timing: {duration: 200}
+            }]
+          }
+        }
+      }
+    },
+    /*
+     * Monitors the `active` attribute to trigger animations.
+     * @private
+     */
+    attributeChangedCallback: function(attr, oldVal, newValue) {
+       if(attr == 'active') {
+          this.playAnimation((this.hasAttribute('compact') ? 'compact-' : '') + (newValue == '' ? 'select' : 'deselect'));
+       }
+    }
+
+  };
+
+  /** @polymerBehavior Polymer.AppBottomNavItemAnimationBehavior */
+  Polymer.AppBottomNavItemAnimationBehavior = [
+    Polymer.NeonAnimationRunnerBehavior,
+    Polymer.AppBottomNavItemAnimationBehaviorImpl
+  ];
+</script>

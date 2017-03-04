@@ -29,8 +29,8 @@ Configuration:
     configure: function(config) {
       var node = config.node;
       this._effect = new KeyframeEffect(node, [
-        {'fontSize': '14', 'opacity': '1'},
-        {'fontSize': '6', 'opacity': '0'}
+        {'fontSize': '14px', 'opacity': '1'},
+        {'fontSize': '6px', 'opacity': '0'}
       ], this.timingFromConfig(config));
       return this._effect;
     }

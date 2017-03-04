@@ -25,9 +25,9 @@ The following snippet adds a bottom navigation element with three child navigati
 
 ```html
 <app-bottom-nav selected="{{selected}}">
-  <app-bottom-nav-item icon="history" label="Recent"></app-bottom-nav-item>
-  <app-bottom-nav-item icon="favorite" label="Favorites"></app-bottom-nav-item>
-  <app-bottom-nav-item icon="maps:near-me" label="Nearby"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:history" label="Recent"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:favorite" label="Favorites"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:near-me" label="Nearby"></app-bottom-nav-item>
 </app-bottom-nav>
 ```
 
@@ -36,11 +36,13 @@ override this behavior, add the `force-narrow` attribute as shown below.
 
 ```html
 <app-bottom-nav force-narrow="true">
-  <app-bottom-nav-item icon="history" label="Recent"></app-bottom-nav-item>
-  <app-bottom-nav-item icon="favorite" label="Favorites"></app-bottom-nav-item>
-  <app-bottom-nav-item icon="maps:near-me" label="Nearby"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:history" label="Recent"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:favorite" label="Favorites"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:near-me" label="Nearby"></app-bottom-nav-item>
 </app-bottom-nav>
 ```
+
+The demos here use icons from the file `app-bottom-nav/demo/demo-icons.html`.
 
 ### Styling
 
@@ -53,18 +55,20 @@ Custom property                  | Description                            | Defa
 <strong>Remarks:</strong>
 - If the background of the parent `app-bottom-nav` is colored, the active and inactive colors should be white or black.
 
-@demo demo/index.html
+@demo demo/index-compact.html
+@demo demo/index-triple.html
 -->
 
 <dom-module id="app-bottom-nav">
   <template>
     <style>
       :host {
+        --abn-impl-bg: var(--app-bottom-nav-background, var(--primary-background-color, #FFFFFF));
         @apply(--layout-fixed-bottom);
         margin: 0px;
         padding: 0px;
         height: 56px;
-        background-color: var(--app-bottom-nav-background, --primary-background-color);
+        background-color: var(--abn-impl-bg);
         opacity: 1;
         visibility: hidden;
         z-index: 1;
@@ -88,29 +92,31 @@ Custom property                  | Description                            | Defa
     <iron-media-query
         query="[[_computeMediaQuery(forceNarrow, responsiveWidth)]]"
         on-query-matches-changed="_onQueryMatchesChanged"></iron-media-query>
-
     <iron-selector id="nav-selector" attr-for-selected="label" selected="{{selected}}" selected-attribute="active">
       <content></content>
     </iron-selector>
-
-
-
   </template>
 
   <script>
     Polymer({
-
       is: 'app-bottom-nav',
-
       properties: {
-
         /**
          * If true, ignore `responsiveWidth` setting and force the narrow layout. (nav is visble)
          */
         forceNarrow: {
           type: Boolean,
           value: false,
-          reflect: true
+          reflectToAttribute: true
+        },
+
+        /**
+         * If true, ignore number of children check and force the compact layout.
+         */
+        forceCompact: {
+          type: Boolean,
+          value: false,
+          observer: '_forceCompactChanged'
         },
 
         /**
@@ -118,7 +124,7 @@ Custom property                  | Description                            | Defa
          */
         selected: {
           type: String,
-          reflect: true
+          reflectToAttribute: true
         },
 
         /**
@@ -130,44 +136,51 @@ Custom property                  | Description                            | Defa
           value: '640px'
         },
       },
+
       listeners: {
         'nav-item-tap': '_tapHandler'
       },
+
       attached: function() {
-        this._computeCompactAttribute();
+        this._computeCompactAttribute(this.forceCompact);
       },
-      _computeCompactAttribute: function () {
-        bottomNavElements = this.queryAllEffectiveChildren("app-bottom-nav-item");
-        if (bottomNavElements.length > 3) {
-          bottomNavElements.forEach(function(e){e.toggleAttribute('compact', true, e)});
-        } else {
-          bottomNavElements.forEach(function(e){e.toggleAttribute('compact', false, e)});
-        }
+
+      _computeCompactAttribute: function (forceCompact) {
+        elist = this.queryAllEffectiveChildren("app-bottom-nav-item");
+        var c = elist.length > 3 || forceCompact;
+        elist.forEach(function(e){e.toggleAttribute('compact', c, e);});
+      },
+
+      /**
+       * Observes `force-compact` property and updates children appropriately
+       */
+      _forceCompactChanged: function(val) {
+        if (this.isAttached) { this._computeCompactAttribute(val); }
       },
 
       /**
        * Forces the `app-bottom-nav` to appear at all times, ignoring `responsiveWidth`
        */
-      force: function() {
+      showAlways: function() {
         this.forceNarrow = true;
       },
 
       /**
        * Resets the element to it's default responsive behavior of "only show when narrow"
        */
-      clearForce: function() {
+      showDefault: function() {
         this.forceNarrow = false;
       },
 
       /**
        * Toggles this element's responsive behavior between "always show" and "only show when narrow"
        */
-      toggleForce: function() {
+      toggleForceNarrow: function() {
         this.forceNarrow = !this.forceNarrow;
       },
+
       _tapHandler: function(e) {
         if (e.detail.name == 'nav-item-tap' && e.detail.active == true) {
-          console.log("'scroll-top' event fired!");
           this.fire('scroll-top', {'from': 'app-bottom-nav'})
         }
       },
@@ -177,7 +190,6 @@ Custom property                  | Description                            | Defa
       },
 
       _onQueryMatchesChanged: function(event) {
-        console.log("_onQueryMatchesChanged()");
         this._narrowChanged(event.detail.value);
       },
 

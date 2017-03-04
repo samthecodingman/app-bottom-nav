@@ -1,6 +1,9 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-behaviors/iron-button-state.html">
+<link rel="import" href="../iron-behaviors/iron-control-state.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-behaviors/paper-ripple-behavior.html">
 <link rel="import" href="app-bottom-nav-item-animation-behavior.html">
 
 <!--
@@ -17,11 +20,13 @@ The following snippet adds a bottom navigation element with three child navigati
 
 ```html
 <app-bottom-nav selected="{{selected}}">
-  <app-bottom-nav-item icon="history" label="Recent"></app-bottom-nav-item>
-  <app-bottom-nav-item icon="favorite" label="Favorites"></app-bottom-nav-item>
-  <app-bottom-nav-item icon="maps:near-me" label="Nearby"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:history" label="Recent"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:favorite" label="Favorites"></app-bottom-nav-item>
+  <app-bottom-nav-item icon="abn-demo:near-me" label="Nearby"></app-bottom-nav-item>
 </app-bottom-nav>
 ```
+
+The demo here uses icons from the file `app-bottom-nav/demo/demo-icons.html`.
 
 ### Styling
 
@@ -45,7 +50,7 @@ Custom property                  | Description                            | Defa
         padding: 8px 12px 10px;
         min-width: 56px;
         max-width: 144px;
-        font-size: 10px;
+        font-size: 12px;
         text-align: center;
 
         -ms-flex: 1 1 144px;
@@ -53,20 +58,26 @@ Custom property                  | Description                            | Defa
         flex: 1;
         -webkit-flex-basis: 144px;
         flex-basis: 144px;
+        --abn-impl-active: var(--app-bottom-nav-active, var(--primary-color, #000000));
+        --abn-impl-inactive: var(--app-bottom-nav-inactive, var(--secondary-text-color, #757575));
 
-        color: var(--app-bottom-nav-inactive, --secondary-text-color);
+        color: var(--abn-impl-inactive);
       }
 
       :host([active]) {
         padding-top: 6px;
-        font-size: 12px;
-        color: var(--app-bottom-nav-active, --primary-color);
+        font-size: 14px;
+        color: var(--abn-impl-active);
       }
 
       :host > * {
         display: block;
         margin: 0 auto;
         width: 100%;
+      }
+
+      paper-ripple {
+        color: var(--abn-impl-active);
       }
 
       iron-icon {
@@ -100,7 +111,12 @@ Custom property                  | Description                            | Defa
   <script>
     Polymer({
       is: 'app-bottom-nav-item',
-      behaviors: [ Polymer.AppBottomNavItemAnimationBehavior ],
+      behaviors: [
+        Polymer.IronControlState,
+        Polymer.IronButtonState,
+        Polymer.PaperRippleBehavior,
+        Polymer.AppBottomNavItemAnimationBehavior
+      ],
       listeners: {
         'tap': '_tapHandler'
       },

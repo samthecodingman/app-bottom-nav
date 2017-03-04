@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>app-bottom-nav demo - more than 3 elements</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-icons/iron-icons.html">
+    <link rel="import" href="../../iron-icons/maps-icons.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../../paper-card/paper-card.html">
+    <link rel="import" href="../app-bottom-nav.html">
+    <link rel="import" href="demo-icons.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+      :root {
+        --app-bottom-nav-background: #CCCCCC;
+        --app-bottom-nav-active: #3F51B5;
+        --app-bottom-nav-inactive: #757575;
+      }
+
+      .code {
+        padding: 20px;
+        margin: 0;
+        background-color: var(--google-grey-100);
+        font-size: 13px;
+        overflow: auto;
+        @apply(--demo-snippet-code);
+      }
+
+      .code > pre {
+        margin: 0;
+        padding: 0 0 10px 0;
+      }
+
+      .code-container {
+        position: relative;
+      }
+
+      .content {
+          @apply(--layout-vertical);
+      }
+      .controls {
+        /*width:100%;*/
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <paper-card heading="app-bottom-nav">
+        <div class="card-content">
+          <p>A bottom navigation element, designed to comply with the <a href="https://material.io/guidelines/components/bottom-navigation.html">Material Design</a> specifications.</p>
+          <p>
+            The app-bottom-nav element should only have between 3 and 5 app-bottom-nav-item elements. The value of &quot;selected&quot; should match one of the labels.
+          </p>
+          <p>
+            <strong>NOTE:</strong> By default, this demo will only be visible when the viewport is narrower than <strong>640px</strong>.
+            This is the default app-drawer-layout responsive width and means the app-bottom-nav will show when the app-drawer retracts.
+            To overcome this function, the paper-buttons below can override the visible state of the app-bottom-nav.
+          </p>
+          <p>This same demo is available with 3 elements <a href="index-triple.html">here</a>.</p>
+          <p>The <em>abn-demo</em> icons used in this demo can be found in <a href="demo-icons.html">demo-icons.html</a>.</p>
+        </div>
+        <div class="card-actions">
+          <paper-button onclick="document.getElementById('bottom-nav').showAlways()">Force</paper-button>
+          <paper-button onclick="document.getElementById('bottom-nav').showDefault()">Reset</paper-button>
+          <paper-button onclick="document.getElementById('bottom-nav').toggleForceNarrow()">Toggle</paper-button>
+        </div>
+      </paper-card>
+      <br />
+
+      <demo-snippet>
+        <template>
+          <app-bottom-nav id="bottom-nav" selected="Favorites">
+            <app-bottom-nav-item icon="abn-demo:history" label="Recent"></app-bottom-nav-item>
+            <app-bottom-nav-item icon="abn-demo:favorite" label="Favorites"></app-bottom-nav-item>
+            <app-bottom-nav-item icon="abn-demo:near-me" label="Nearby"></app-bottom-nav-item>
+            <app-bottom-nav-item icon="abn-demo:close" label="Quit"></app-bottom-nav-item>
+          </app-bottom-nav>
+
+          <span>Resize the viewport to see the demo.</span>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>

@@ -28,14 +28,9 @@ Configuration:
 
     configure: function(config) {
       var node = config.node;
-      var activeColor = this.getComputedStyleValue('--app-bottom-nav-active');
-      if (activeColor == '') { activeColor = this.getComputedStyleValue('--primary-color'); }
-      var inactiveColor = this.getComputedStyleValue('--app-bottom-nav-inactive');
-      if (inactiveColor == '') { inactiveColor = this.getComputedStyleValue('--secondary-text-color'); }
-
       this._effect = new KeyframeEffect(node, [
-        {'paddingTop': '6px', 'color': activeColor},
-        {'paddingTop': '8px', 'color': inactiveColor}
+        {'paddingTop': '6px', 'color': node.getComputedStyleValue('--abn-impl-active')},
+        {'paddingTop': '8px', 'color': node.getComputedStyleValue('--abn-impl-inactive')}
       ], this.timingFromConfig(config));
       return this._effect;
     }

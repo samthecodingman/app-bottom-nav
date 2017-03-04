@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>app-bottom-nav demo</title>
+    <title>app-bottom-nav demo - 3 elements</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
@@ -15,9 +15,10 @@
     <link rel="import" href="../../paper-button/paper-button.html">
     <link rel="import" href="../../paper-card/paper-card.html">
     <link rel="import" href="../app-bottom-nav.html">
+    <link rel="import" href="demo-icons.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
-      * {
+      :root {
         --app-bottom-nav-background: #CCCCCC;
         --app-bottom-nav-active: #3F51B5;
         --app-bottom-nav-inactive: #757575;
@@ -64,11 +65,13 @@
             This is the default app-drawer-layout responsive width and means the app-bottom-nav will show when the app-drawer retracts.
             To overcome this function, the paper-buttons below can override the visible state of the app-bottom-nav.
           </p>
+          <p>This same demo is available with more than 3 elements <a href="index-compact.html">here</a>.</p>
+          <p>The <em>abn-demo</em> icons used in this demo can be found in <a href="demo-icons.html">demo-icons.html</a>.</p>
         </div>
         <div class="card-actions">
-          <paper-button onclick="document.getElementById('bottom-nav').force()">Force</paper-button>
-          <paper-button onclick="document.getElementById('bottom-nav').clearForce()">Reset</paper-button>
-          <paper-button onclick="document.getElementById('bottom-nav').toggleForce()">Toggle</paper-button>
+          <paper-button onclick="document.getElementById('bottom-nav').showAlways()">Force</paper-button>
+          <paper-button onclick="document.getElementById('bottom-nav').showDefault()">Reset</paper-button>
+          <paper-button onclick="document.getElementById('bottom-nav').toggleForceNarrow()">Toggle</paper-button>
         </div>
       </paper-card>
       <br />
@@ -76,10 +79,9 @@
       <demo-snippet>
         <template>
           <app-bottom-nav id="bottom-nav" selected="Favorites">
-            <app-bottom-nav-item icon="history" label="Recent"></app-bottom-nav-item>
-            <app-bottom-nav-item icon="favorite" label="Favorites"></app-bottom-nav-item>
-            <app-bottom-nav-item icon="maps:near-me" label="Nearby"></app-bottom-nav-item>
-            <app-bottom-nav-item icon="close" label="Quit"></app-bottom-nav-item>
+            <app-bottom-nav-item icon="abn-demo:history" label="Recent"></app-bottom-nav-item>
+            <app-bottom-nav-item icon="abn-demo:favorite" label="Favorites"></app-bottom-nav-item>
+            <app-bottom-nav-item icon="abn-demo:near-me" label="Nearby"></app-bottom-nav-item>
           </app-bottom-nav>
 
           <span>Resize the viewport to see the demo.</span>

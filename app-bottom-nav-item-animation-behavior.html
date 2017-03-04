@@ -51,31 +51,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           } : {
             'select': [{
               name: 'grow-font-animation',
-              node: this.$.label
+              node: this.$.label,
+              timing: {duration: 200}
             },{
               name: 'grow-animation',
-              node: this
+              node: this,
+              timing: {duration: 200}
             }],
             'compact-select': [{
               name: 'compact-grow-font-animation',
-              node: this.$.label
+              node: this.$.label,
+              timing: {duration: 200}
             },{
               name: 'compact-grow-animation',
-              node: this
+              node: this,
+              timing: {duration: 200}
             }],
             'deselect': [{
               name: 'shrink-font-animation',
-              node: this.$.label
+              node: this.$.label,
+              timing: {duration: 200}
             },{
               name: 'shrink-animation',
-              node: this
+              node: this,
+              timing: {duration: 200}
             }],
             'compact-deselect': [{
               name: 'compact-shrink-font-animation',
-              node: this.$.label
+              node: this.$.label,
+              timing: {duration: 200}
             },{
               name: 'compact-shrink-animation',
-              node: this
+              node: this,
+              timing: {duration: 200}
             }]
           }
         }
